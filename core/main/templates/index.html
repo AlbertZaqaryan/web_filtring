@@ -1,0 +1,72 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notebook Filter</title>
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+</head>
+<body>
+    <div class="container">
+        <h1>Filter Notebooks</h1>
+        <form method="post" class="filter-form">
+            {% csrf_token %}
+            <fieldset>
+                <legend>Colors</legend>
+                {% for color in color_list %}
+                <div class="checkbox-group">
+                    <input type="checkbox" id="color{{ color.id }}" name="color_id" value="{{ color.id }}">
+                    <label for="color{{ color.id }}">{{ color.color_name }}</label>
+                </div>
+                {% endfor %}
+            </fieldset>
+
+            <fieldset>
+                <legend>CPUs</legend>
+                {% for cpu in cpus %}
+                <div class="checkbox-group">
+                    <input type="checkbox" id="cpu{{ forloop.counter }}" name="cpu_name" value="{{ cpu }}">
+                    <label for="cpu{{ forloop.counter }}">{{ cpu }}</label>
+                </div>
+                {% endfor %}
+            </fieldset>
+
+            <fieldset>
+                <legend>GPUs</legend>
+                {% for gpu in gpus %}
+                <div class="checkbox-group">
+                    <input type="checkbox" id="gpu{{ forloop.counter }}" name="gpu_name" value="{{ gpu }}">
+                    <label for="gpu{{ forloop.counter }}">{{ gpu }}</label>
+                </div>
+                {% endfor %}
+            </fieldset>
+
+            <input type="submit" value="Submit" class="submit-button">
+        </form>
+
+        <div class="notebook-list">
+            {% for notebook in notebook_list %}
+            <div class="notebook-item">
+                <h3>{{ notebook.name }}</h3>
+                <img src="{{ notebook.image1.url }}" alt="{{ notebook.name }}" class="notebook-image">
+                <p>Price: ${{ notebook.price }}</p>
+                <p>CPU: {{ notebook.cpu }}</p>
+                <p>GPU: {{ notebook.gpu }}</p>
+                <p>RAM: {{ notebook.ram }} GB</p>
+                <p>SSD: {{ notebook.ssd }} GB</p>
+                <p>Display: {{ notebook.display }}"</p>
+                <p>DPI: {{ notebook.dpi }}</p>
+                <p>OS: {{ notebook.os }}</p>
+                <p>Colors: 
+                    {% for color in notebook.color.all %}
+                    {{ color.color_name }}{% if not forloop.last %}, {% endif %}
+                    {% endfor %}
+                </p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+</html>
